@@ -1,0 +1,2135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CartSync Pro — One Cart. Every Device. Always.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ─── RESET & BASE ────────────────────────────────────────── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #07080f;
+        --bg2: #0d0f1a;
+        --bg3: #121525;
+        --teal: #00e5c3;
+        --teal-dim: #00b89e;
+        --teal-glow: rgba(0, 229, 195, 0.15);
+        --teal-border: rgba(0, 229, 195, 0.25);
+        --white: #f0f2ff;
+        --muted: #7b82a0;
+        --border: rgba(255, 255, 255, 0.07);
+        --card: rgba(255, 255, 255, 0.04);
+        --font-display: "Syne", sans-serif;
+        --font-body: "Plus Jakarta Sans", sans-serif;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--white);
+        font-family: var(--font-body);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      ::selection {
+        background: var(--teal);
+        color: var(--bg);
+      }
+
+      /* ─── UTILS ───────────────────────────────────────────────── */
+      .container {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .teal {
+        color: var(--teal);
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(32px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal-delay-1 {
+        transition-delay: 0.1s;
+      }
+      .reveal-delay-2 {
+        transition-delay: 0.2s;
+      }
+      .reveal-delay-3 {
+        transition-delay: 0.3s;
+      }
+      .reveal-delay-4 {
+        transition-delay: 0.4s;
+      }
+
+      /* ─── NOISE OVERLAY ────────────────────────────────────────── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+        opacity: 0.022;
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      /* ─── NAV ─────────────────────────────────────────────────── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(7, 8, 15, 0.8);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        transition: background 0.3s;
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+      }
+      .logo {
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--white);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        background: var(--teal);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo-icon svg {
+        width: 18px;
+        height: 18px;
+        fill: var(--bg);
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        list-style: none;
+      }
+      .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--white);
+      }
+      .nav-cta {
+        background: var(--teal);
+        color: var(--bg) !important;
+        padding: 9px 20px;
+        border-radius: 8px;
+        font-weight: 700 !important;
+        font-size: 0.875rem !important;
+        transition:
+          background 0.2s,
+          transform 0.2s !important;
+      }
+      .nav-cta:hover {
+        background: var(--teal-dim) !important;
+        transform: translateY(-1px);
+      }
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 4px;
+      }
+      .hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--white);
+        border-radius: 2px;
+        transition: all 0.3s;
+      }
+
+      /* ─── HERO ────────────────────────────────────────────────── */
+      .hero {
+        padding: 130px 0 100px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-glow {
+        position: absolute;
+        top: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 800px;
+        height: 600px;
+        background: radial-gradient(
+          ellipse,
+          rgba(0, 229, 195, 0.1) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 229, 195, 0.1);
+        border: 1px solid var(--teal-border);
+        border-radius: 100px;
+        padding: 6px 16px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--teal);
+        margin-bottom: 28px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--teal);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2.8rem, 6vw, 5rem);
+        font-weight: 800;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin-bottom: 24px;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: var(--teal);
+        position: relative;
+      }
+      .hero p {
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        color: var(--muted);
+        max-width: 560px;
+        line-height: 1.7;
+        margin-bottom: 40px;
+      }
+      .hero-ctas {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--teal);
+        color: var(--bg);
+        padding: 14px 28px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+        box-shadow: 0 0 0 0 rgba(0, 229, 195, 0.4);
+      }
+      .btn-primary:hover {
+        background: var(--teal-dim);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 229, 195, 0.25);
+      }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--white);
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        border: 1px solid var(--border);
+        padding: 14px 24px;
+        border-radius: 10px;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .btn-secondary:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+        background: var(--card);
+      }
+      .hero-stats {
+        display: flex;
+        gap: 40px;
+        margin-top: 64px;
+        flex-wrap: wrap;
+      }
+      .stat-item {
+      }
+      .stat-number {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--white);
+      }
+      .stat-label {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .hero-visual {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 42%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+
+      /* ─── DEVICE ANIMATION ─────────────────────────────────────── */
+      .devices-wrapper {
+        position: relative;
+        width: 420px;
+        height: 320px;
+      }
+      .device {
+        position: absolute;
+        border-radius: 16px;
+        background: var(--bg3);
+        border: 1px solid rgba(0, 229, 195, 0.2);
+        box-shadow:
+          0 0 40px rgba(0, 0, 0, 0.6),
+          0 0 0 1px var(--border);
+      }
+      .device-desktop {
+        width: 280px;
+        height: 180px;
+        top: 0;
+        left: 0;
+        animation: float-a 4s ease-in-out infinite;
+      }
+      .device-mobile {
+        width: 100px;
+        height: 180px;
+        top: 60px;
+        right: 10px;
+        animation: float-b 4s ease-in-out infinite;
+      }
+      @keyframes float-a {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      @keyframes float-b {
+        0%,
+        100% {
+          transform: translateY(-5px);
+        }
+        50% {
+          transform: translateY(5px);
+        }
+      }
+      .device-screen {
+        width: calc(100% - 16px);
+        margin: 8px;
+        height: calc(100% - 16px);
+        background: var(--bg2);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+      }
+      .screen-bar {
+        height: 28px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 10px;
+      }
+      .screen-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+      }
+      .dot-r {
+        background: #ff5f57;
+      }
+      .dot-y {
+        background: #febc2e;
+      }
+      .dot-g {
+        background: #28c840;
+      }
+      .screen-body {
+        padding: 10px 8px;
+      }
+      .screen-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 8px;
+        border-radius: 6px;
+        background: var(--bg3);
+        margin-bottom: 5px;
+        font-size: 0.65rem;
+        color: var(--muted);
+      }
+      .screen-item-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        background: var(--teal-glow);
+        border: 1px solid var(--teal-border);
+        flex-shrink: 0;
+      }
+      .screen-item-name {
+        color: var(--white);
+        font-size: 0.6rem;
+      }
+      .sync-arrow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 48px;
+        height: 48px;
+        background: var(--teal);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        animation: arrow-pulse 2s ease-in-out infinite;
+      }
+      @keyframes arrow-pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(0, 229, 195, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 0 14px rgba(0, 229, 195, 0);
+        }
+      }
+      .sync-arrow svg {
+        width: 22px;
+        height: 22px;
+        fill: var(--bg);
+      }
+      .sync-line {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 120px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--teal),
+          transparent
+        );
+        animation: sweep 1.8s ease-in-out infinite;
+      }
+      @keyframes sweep {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scaleX(0);
+        }
+        50% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scaleX(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scaleX(0);
+        }
+      }
+
+      /* ─── PROBLEM SECTION ─────────────────────────────────────── */
+      .problem {
+        padding: 100px 0;
+        background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+        position: relative;
+      }
+      .section-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--teal);
+        margin-bottom: 16px;
+        display: block;
+      }
+      .section-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 20px;
+      }
+      .section-sub {
+        color: var(--muted);
+        font-size: 1.05rem;
+        max-width: 520px;
+        line-height: 1.7;
+        margin-bottom: 56px;
+      }
+      .problem-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .problem-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px;
+        position: relative;
+        overflow: hidden;
+        transition:
+          border-color 0.3s,
+          transform 0.3s;
+      }
+      .problem-card:hover {
+        border-color: rgba(0, 229, 195, 0.2);
+        transform: translateY(-4px);
+      }
+      .problem-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at top left,
+          rgba(0, 229, 195, 0.04) 0%,
+          transparent 60%
+        );
+        pointer-events: none;
+      }
+      .problem-card h3 {
+        font-family: var(--font-display);
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .problem-card p {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.7;
+      }
+      .problem-number {
+        font-family: var(--font-display);
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--teal);
+        opacity: 0.15;
+        position: absolute;
+        top: 16px;
+        right: 20px;
+      }
+      .problem-icon {
+        width: 44px;
+        height: 44px;
+        background: var(--teal-glow);
+        border: 1px solid var(--teal-border);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      .problem-icon svg {
+        width: 22px;
+        height: 22px;
+        stroke: var(--teal);
+        fill: none;
+        stroke-width: 2;
+      }
+
+      /* ─── HOW IT WORKS ────────────────────────────────────────── */
+      .how-it-works {
+        padding: 100px 0;
+        position: relative;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0;
+        margin-top: 64px;
+        position: relative;
+      }
+      .steps::before {
+        content: "";
+        position: absolute;
+        top: 32px;
+        left: calc(16.67% + 20px);
+        right: calc(16.67% + 20px);
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--teal),
+          transparent 50%,
+          var(--teal)
+        );
+        opacity: 0.3;
+      }
+      .step {
+        text-align: center;
+        padding: 0 24px;
+        position: relative;
+      }
+      .step-number {
+        width: 64px;
+        height: 64px;
+        background: var(--bg3);
+        border: 1px solid var(--teal-border);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: var(--teal);
+        margin: 0 auto 28px;
+        position: relative;
+        z-index: 1;
+      }
+      .step h3 {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .step p {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.7;
+      }
+
+      /* ─── FEATURES ────────────────────────────────────────────── */
+      .features {
+        padding: 100px 0;
+        background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 64px;
+      }
+      .feature-card {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+        transition:
+          border-color 0.3s,
+          transform 0.3s;
+      }
+      .feature-card:hover {
+        border-color: rgba(0, 229, 195, 0.25);
+        transform: translateY(-4px);
+      }
+      .feature-card.featured {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+      }
+      .feature-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 229, 195, 0.06) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .feature-tag {
+        display: inline-block;
+        background: rgba(0, 229, 195, 0.1);
+        border: 1px solid var(--teal-border);
+        color: var(--teal);
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 4px 10px;
+        border-radius: 100px;
+        margin-bottom: 20px;
+      }
+      .feature-card h3 {
+        font-family: var(--font-display);
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+      .feature-card p {
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.75;
+      }
+      .feature-list {
+        list-style: none;
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .feature-list li {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .feature-list li::before {
+        content: "";
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        background: var(--teal-glow);
+        border: 1px solid var(--teal-border);
+        border-radius: 50%;
+        margin-top: 2px;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 8l3.5 3.5L13 5' stroke='%2300e5c3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 12px;
+      }
+
+      /* Merge visual */
+      .merge-visual {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px;
+        font-size: 0.8rem;
+        font-family: monospace;
+      }
+      .merge-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        background: var(--bg);
+      }
+      .merge-row:last-child {
+        margin-bottom: 0;
+      }
+      .merge-label {
+        color: var(--muted);
+        font-size: 0.72rem;
+        width: 110px;
+        flex-shrink: 0;
+      }
+      .merge-value {
+        color: var(--white);
+        flex: 1;
+      }
+      .merge-badge {
+        font-size: 0.65rem;
+        padding: 2px 8px;
+        border-radius: 100px;
+        font-weight: 700;
+      }
+      .badge-max {
+        background: rgba(0, 229, 195, 0.15);
+        color: var(--teal);
+      }
+      .badge-warn {
+        background: rgba(255, 165, 0, 0.15);
+        color: #f5a623;
+      }
+      .badge-new {
+        background: rgba(100, 200, 100, 0.15);
+        color: #6acc6a;
+      }
+
+      /* ─── PRICING ─────────────────────────────────────────────── */
+      .pricing {
+        padding: 100px 0;
+      }
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 64px;
+      }
+      .pricing-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 36px 32px;
+        position: relative;
+        transition:
+          transform 0.3s,
+          border-color 0.3s;
+      }
+      .pricing-card:hover {
+        transform: translateY(-6px);
+      }
+      .pricing-card.highlighted {
+        background: linear-gradient(
+          145deg,
+          rgba(0, 229, 195, 0.06),
+          rgba(0, 229, 195, 0.02)
+        );
+        border-color: rgba(0, 229, 195, 0.4);
+      }
+      .popular-badge {
+        position: absolute;
+        top: -13px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--teal);
+        color: var(--bg);
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 4px 14px;
+        border-radius: 100px;
+        white-space: nowrap;
+      }
+      .plan-name {
+        font-family: var(--font-display);
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+      .plan-price {
+        font-family: var(--font-display);
+        font-size: 2.8rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+      .plan-price span {
+        font-size: 1rem;
+        color: var(--muted);
+        font-weight: 400;
+      }
+      .plan-desc {
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-bottom: 28px;
+      }
+      .plan-divider {
+        height: 1px;
+        background: var(--border);
+        margin-bottom: 24px;
+      }
+      .plan-features {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .plan-features li {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      .plan-features li.included {
+        color: var(--white);
+      }
+      .check-icon {
+        flex-shrink: 0;
+        color: var(--teal);
+        font-size: 0.9rem;
+      }
+      .plan-cta {
+        display: block;
+        text-align: center;
+        margin-top: 28px;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .plan-cta-outline {
+        border: 1px solid var(--border);
+        color: var(--white);
+      }
+      .plan-cta-outline:hover {
+        border-color: rgba(255, 255, 255, 0.25);
+        background: var(--card);
+      }
+      .plan-cta-solid {
+        background: var(--teal);
+        color: var(--bg);
+      }
+      .plan-cta-solid:hover {
+        background: var(--teal-dim);
+      }
+
+      /* ─── SOCIAL PROOF ────────────────────────────────────────── */
+      .social-proof {
+        padding: 80px 0;
+        background: var(--bg2);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+      .proof-numbers {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        text-align: center;
+      }
+      .proof-stat {
+      }
+      .proof-num {
+        font-family: var(--font-display);
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 6px;
+      }
+      .proof-num em {
+        font-style: normal;
+        color: var(--teal);
+      }
+      .proof-desc {
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      /* ─── EARLY ACCESS FORM ───────────────────────────────────── */
+      .early-access {
+        padding: 120px 0;
+        position: relative;
+        overflow: hidden;
+      }
+      .form-glow {
+        position: absolute;
+        bottom: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        height: 500px;
+        background: radial-gradient(
+          ellipse,
+          rgba(0, 229, 195, 0.08) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .form-wrapper {
+        max-width: 640px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .form-wrapper .section-title {
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+      }
+      .form-wrapper .section-sub {
+        margin: 0 auto 48px;
+      }
+      .form-card {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 48px 40px;
+        text-align: left;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--white);
+        margin-bottom: 8px;
+      }
+      .form-label span {
+        color: var(--teal);
+      }
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--white);
+        font-family: var(--font-body);
+        font-size: 0.95rem;
+        padding: 13px 16px;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .form-input::placeholder,
+      .form-textarea::placeholder {
+        color: var(--muted);
+      }
+      .form-input:focus,
+      .form-textarea:focus {
+        border-color: var(--teal);
+        box-shadow: 0 0 0 3px rgba(0, 229, 195, 0.1);
+      }
+      .form-textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .form-submit {
+        width: 100%;
+        padding: 15px;
+        background: var(--teal);
+        color: var(--bg);
+        border: none;
+        border-radius: 10px;
+        font-family: var(--font-body);
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 8px;
+        transition:
+          background 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .form-submit:hover {
+        background: var(--teal-dim);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(0, 229, 195, 0.25);
+      }
+      .form-submit:active {
+        transform: translateY(0);
+      }
+      .form-note {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-top: 16px;
+      }
+      .success-state {
+        display: none;
+        text-align: center;
+        padding: 40px;
+      }
+      .success-icon {
+        width: 64px;
+        height: 64px;
+        background: var(--teal-glow);
+        border: 2px solid var(--teal);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+      }
+      .success-icon svg {
+        width: 30px;
+        height: 30px;
+        stroke: var(--teal);
+        fill: none;
+        stroke-width: 2.5;
+      }
+      .success-state h3 {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .success-state p {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      /* ─── FOOTER ──────────────────────────────────────────────── */
+      footer {
+        padding: 48px 0;
+        border-top: 1px solid var(--border);
+      }
+      .footer-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .footer-copy {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      .footer-links {
+        display: flex;
+        gap: 24px;
+        list-style: none;
+      }
+      .footer-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: var(--white);
+      }
+
+      /* ─── MOBILE MENU ─────────────────────────────────────────── */
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: var(--bg);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+      }
+      .mobile-menu.open {
+        display: flex;
+      }
+      .mobile-menu a {
+        font-family: var(--font-display);
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--white);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .mobile-menu a:hover {
+        color: var(--teal);
+      }
+      .menu-close {
+        position: absolute;
+        top: 20px;
+        right: 24px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--muted);
+        background: none;
+        border: none;
+        color: var(--white);
+      }
+
+      /* ─── RESPONSIVE ──────────────────────────────────────────── */
+      @media (max-width: 960px) {
+        .hero-visual {
+          display: none;
+        }
+        .problem-grid {
+          grid-template-columns: 1fr;
+        }
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .feature-card.featured {
+          grid-template-columns: 1fr;
+        }
+        .steps {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+        .steps::before {
+          display: none;
+        }
+        .pricing-grid {
+          grid-template-columns: 1fr;
+          max-width: 400px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .proof-numbers {
+          grid-template-columns: 1fr 1fr;
+          gap: 32px;
+        }
+        .nav-links {
+          display: none;
+        }
+        .hamburger {
+          display: flex;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .form-card {
+          padding: 32px 24px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .hero {
+          padding: 80px 0 60px;
+        }
+        .hero-stats {
+          gap: 24px;
+        }
+        .proof-numbers {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ─── MOBILE MENU ──────────────────────────────────────── -->
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="menu-close" onclick="closeMobileMenu()">✕</button>
+      <a href="#features" onclick="closeMobileMenu()">Features</a>
+      <a href="#how-it-works" onclick="closeMobileMenu()">How It Works</a>
+      <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
+      <a href="#early-access" onclick="closeMobileMenu()">Get Early Access</a>
+    </div>
+
+    <!-- ─── NAV ─────────────────────────────────────────────── -->
+    <nav>
+      <div class="container">
+        <div class="nav-inner">
+          <a href="#" class="logo">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 3L3 8l9 5 9-5-9-5zM3 13l9 5 9-5M3 18l9 5 9-5" />
+              </svg>
+            </div>
+            CartSync Pro
+          </a>
+          <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li>
+              <a href="#early-access" class="nav-cta">Get Early Access</a>
+            </li>
+          </ul>
+          <div class="hamburger" onclick="openMobileMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ─── HERO ──────────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="hero-glow"></div>
+      <div class="container" style="position: relative">
+        <div class="hero-badge reveal">
+          <span class="badge-dot"></span>
+          Now in Early Access — Shopify App
+        </div>
+        <h1 class="reveal reveal-delay-1">
+          One Cart.<br />
+          Every <em>Device.</em><br />
+          Always.
+        </h1>
+        <p class="reveal reveal-delay-2">
+          Shopify carts vanish when customers switch devices. CartSync Pro saves
+          every cart to the cloud and silently restores it — on any device, any
+          session, logged in or not.
+        </p>
+        <div class="hero-ctas reveal reveal-delay-3">
+          <a href="#early-access" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Get Early Access
+          </a>
+          <a href="#features" class="btn-secondary">
+            See How It Works
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+        <div class="hero-stats reveal reveal-delay-4">
+          <div class="stat-item">
+            <div class="stat-number">
+              70<span style="color: var(--teal)">%</span>
+            </div>
+            <div class="stat-label">Average cart abandonment rate</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">
+              ~20<span style="color: var(--teal)">%</span>
+            </div>
+            <div class="stat-label">Lost to device switching</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">$5k</div>
+            <div class="stat-label">Recoverable revenue/month</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating device illustration -->
+      <div class="hero-visual">
+        <div class="devices-wrapper">
+          <div class="device device-desktop">
+            <div class="device-screen">
+              <div class="screen-bar">
+                <div class="screen-dot dot-r"></div>
+                <div class="screen-dot dot-y"></div>
+                <div class="screen-dot dot-g"></div>
+              </div>
+              <div class="screen-body">
+                <div class="screen-item">
+                  <div class="screen-item-icon"></div>
+                  <div>
+                    <div class="screen-item-name">Nike Air Max — sz 10</div>
+                    <div style="color: var(--teal); font-size: 0.55rem">
+                      $120.00 × 1
+                    </div>
+                  </div>
+                </div>
+                <div class="screen-item">
+                  <div class="screen-item-icon"></div>
+                  <div>
+                    <div class="screen-item-name">Running Socks</div>
+                    <div style="color: var(--teal); font-size: 0.55rem">
+                      $15.00 × 2
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="
+                    margin-top: 8px;
+                    padding: 6px 8px;
+                    border-radius: 6px;
+                    background: var(--teal);
+                    color: var(--bg);
+                    font-size: 0.6rem;
+                    font-weight: 700;
+                    text-align: center;
+                  "
+                >
+                  ✓ Cart Restored
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sync-line"></div>
+          <div class="sync-arrow">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
+              />
+            </svg>
+          </div>
+
+          <div class="device device-mobile">
+            <div class="device-screen">
+              <div class="screen-body" style="padding: 8px 6px">
+                <div class="screen-item" style="margin-bottom: 4px">
+                  <div
+                    class="screen-item-icon"
+                    style="width: 14px; height: 14px; flex-shrink: 0"
+                  ></div>
+                  <div style="font-size: 0.5rem; color: var(--muted)">
+                    Nike Air Max
+                  </div>
+                </div>
+                <div class="screen-item">
+                  <div
+                    class="screen-item-icon"
+                    style="width: 14px; height: 14px; flex-shrink: 0"
+                  ></div>
+                  <div style="font-size: 0.5rem; color: var(--muted)">
+                    Socks ×2
+                  </div>
+                </div>
+                <div
+                  style="
+                    margin-top: 6px;
+                    text-align: center;
+                    font-size: 0.55rem;
+                    color: var(--teal);
+                  "
+                >
+                  Syncing…
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── PROBLEM ────────────────────────────────────────────── -->
+    <section class="problem" id="problem">
+      <div class="container">
+        <span class="section-label reveal">The Problem</span>
+        <h2 class="section-title reveal">
+          Shopify carts are<br />stuck in the browser
+        </h2>
+        <p class="section-sub reveal">
+          Shopify stores cart data in browser cookies. The moment a customer
+          switches devices — it's gone. Every competitor ignores these gaps.
+        </p>
+
+        <div class="problem-grid">
+          <div class="problem-card reveal reveal-delay-1">
+            <div class="problem-number">01</div>
+            <div class="problem-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="5" y="2" width="14" height="20" rx="2" />
+                <circle cx="12" cy="17" r="1" />
+              </svg>
+            </div>
+            <h3>Login-only sync</h3>
+            <p>
+              Every existing app drops the ball for guest shoppers. If they
+              haven't created an account, their cart vanishes — no matter which
+              app you've installed.
+            </p>
+          </div>
+          <div class="problem-card reveal reveal-delay-2">
+            <div class="problem-number">02</div>
+            <div class="problem-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5M2 17l10 5 10-5M2 12l10 5 10-5"
+                />
+              </svg>
+            </div>
+            <h3>Dumb merge logic</h3>
+            <p>
+              Two carts on two devices — most apps just overwrite one with the
+              other. Items get lost. Customers get confused. Sales get missed.
+            </p>
+          </div>
+          <div class="problem-card reveal reveal-delay-3">
+            <div class="problem-number">03</div>
+            <div class="problem-icon">
+              <svg viewBox="0 0 24 24">
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+              </svg>
+            </div>
+            <h3>No analytics</h3>
+            <p>
+              Merchants are flying blind. How many carts were recovered? How
+              much revenue was saved? Which products are most commonly
+              abandoned? No one tracks it.
+            </p>
+          </div>
+          <div class="problem-card reveal reveal-delay-4">
+            <div class="problem-number">04</div>
+            <div class="problem-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+              </svg>
+            </div>
+            <h3>Zero personalization</h3>
+            <p>
+              A customer returns after 3 days with a cart full of items — no app
+              takes advantage of that moment to nudge, alert, or personalize the
+              experience.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── HOW IT WORKS ───────────────────────────────────────── -->
+    <section class="how-it-works" id="how-it-works">
+      <div class="container">
+        <span class="section-label reveal">How It Works</span>
+        <h2 class="section-title reveal">
+          Dead simple for merchants.<br />Invisible to shoppers.
+        </h2>
+        <p class="section-sub reveal">
+          Install once in seconds. CartSync Pro handles everything silently in
+          the background.
+        </p>
+
+        <div class="steps">
+          <div class="step reveal reveal-delay-1">
+            <div class="step-number">1</div>
+            <h3>Install & Enable</h3>
+            <p>
+              Add CartSync Pro from the Shopify App Store. One-click Theme
+              Extension install — no code, no theme editing required.
+            </p>
+          </div>
+          <div class="step reveal reveal-delay-2">
+            <div class="step-number">2</div>
+            <h3>We Watch Every Cart</h3>
+            <p>
+              Our JavaScript extension listens to every cart change and silently
+              saves a snapshot to our cloud — keyed to the customer's account or
+              email hash.
+            </p>
+          </div>
+          <div class="step reveal reveal-delay-3">
+            <div class="step-number">3</div>
+            <h3>Cart Restored. Revenue Saved.</h3>
+            <p>
+              When the customer logs in on any device, we intelligently merge
+              and restore their cart. They see a gentle "Your cart is back ✓"
+              toast. You see the sale.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FEATURES ──────────────────────────────────────────── -->
+    <section class="features" id="features">
+      <div class="container">
+        <span class="section-label reveal">Features</span>
+        <h2 class="section-title reveal">Built different.<br />By design.</h2>
+        <p class="section-sub reveal">
+          Four differentiators that no competitor on the Shopify App Store
+          offers today.
+        </p>
+
+        <div class="features-grid">
+          <!-- FEATURED CARD: Smart Merge -->
+          <div class="feature-card featured reveal">
+            <div>
+              <div class="feature-tag">D2 — Smart Merge Engine</div>
+              <h3>Intelligent cart merging,<br />not just overwriting</h3>
+              <p>
+                When a customer has carts on two devices, most apps flip a coin.
+                We run a smart merge: union all items, take the max quantity,
+                validate stock, and flag price changes — all before restoration.
+              </p>
+              <ul class="feature-list">
+                <li>Keeps the highest quantity on conflicts</li>
+                <li>Checks stock before restoring each item</li>
+                <li>Flags price drops with a celebratory nudge</li>
+                <li>Removes unavailable variants gracefully</li>
+              </ul>
+            </div>
+            <div class="merge-visual">
+              <div
+                style="
+                  font-size: 0.7rem;
+                  color: var(--muted);
+                  margin-bottom: 12px;
+                  font-family: monospace;
+                "
+              >
+                // merge_engine.js — output
+              </div>
+              <div class="merge-row">
+                <div class="merge-label">Nike Air Max ×</div>
+                <div class="merge-value">2</div>
+                <div class="merge-badge badge-max">MAX QTY</div>
+              </div>
+              <div class="merge-row">
+                <div class="merge-label">Running Socks ×</div>
+                <div class="merge-value">1</div>
+                <div class="merge-badge badge-warn">1 LEFT ⚠</div>
+              </div>
+              <div class="merge-row">
+                <div class="merge-label">Hoodie ×</div>
+                <div class="merge-value">2</div>
+                <div class="merge-badge badge-new">NEW</div>
+              </div>
+              <div
+                style="
+                  margin-top: 12px;
+                  padding: 10px 12px;
+                  border-radius: 8px;
+                  background: rgba(0, 229, 195, 0.08);
+                  border: 1px solid var(--teal-border);
+                "
+              >
+                <span
+                  style="
+                    color: var(--teal);
+                    font-size: 0.72rem;
+                    font-weight: 700;
+                  "
+                  >✓ Merged cart ready — $270.00</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Guest Mode -->
+          <div class="feature-card reveal reveal-delay-1">
+            <div class="feature-tag">D1 — Guest Mode Sync</div>
+            <h3>Works even without an account</h3>
+            <p>
+              We hash the customer's email (SHA-256) to create an anonymous
+              fingerprint. Guest cart saved on mobile? Enter the same email at
+              checkout on desktop — it's there. No account needed. No raw email
+              stored.
+            </p>
+            <ul class="feature-list" style="margin-top: 20px">
+              <li>Privacy-first: only irreversible hashes stored</li>
+              <li>Triggered on checkout email entry</li>
+              <li>Opt-in "Save My Cart" widget available</li>
+            </ul>
+          </div>
+
+          <!-- Analytics -->
+          <div class="feature-card reveal reveal-delay-2">
+            <div class="feature-tag">D3 — Deep Analytics</div>
+            <h3>See exactly how much you're recovering</h3>
+            <p>
+              A merchant dashboard that tells you: carts synced per day, revenue
+              recovered, top products abandoned cross-device, and device
+              switching patterns. Finally, proof that it's working.
+            </p>
+            <ul class="feature-list" style="margin-top: 20px">
+              <li>Revenue recovered metric per period</li>
+              <li>Mobile → Desktop switch breakdowns</li>
+              <li>Top recovered products report</li>
+            </ul>
+          </div>
+
+          <!-- AI Nudge -->
+          <div
+            class="feature-card reveal reveal-delay-3"
+            style="grid-column: 1 / -1; max-width: 100%"
+          >
+            <div class="feature-tag">D4 — AI Nudge Engine</div>
+            <h3>Powered by Claude — smarter recovery messages</h3>
+            <p style="max-width: 640px">
+              When a cart is restored, CartSync Pro uses AI to craft
+              personalized nudges based on cart contents, time elapsed, stock
+              levels, and price changes. No generic "Your cart is waiting" —
+              real, contextual moments.
+            </p>
+            <div
+              style="
+                display: flex;
+                gap: 16px;
+                margin-top: 28px;
+                flex-wrap: wrap;
+              "
+            >
+              <div
+                style="
+                  background: var(--bg2);
+                  border: 1px solid var(--border);
+                  border-radius: 12px;
+                  padding: 16px 20px;
+                  flex: 1;
+                  min-width: 220px;
+                "
+              >
+                <div
+                  style="
+                    font-size: 0.7rem;
+                    color: var(--teal);
+                    font-weight: 700;
+                    margin-bottom: 6px;
+                  "
+                >
+                  PRICE DROP
+                </div>
+                <div style="font-size: 0.88rem; color: var(--white)">
+                  "Good news! The Nike Air Max dropped to $99. Only 3 left. 🎉"
+                </div>
+              </div>
+              <div
+                style="
+                  background: var(--bg2);
+                  border: 1px solid var(--border);
+                  border-radius: 12px;
+                  padding: 16px 20px;
+                  flex: 1;
+                  min-width: 220px;
+                "
+              >
+                <div
+                  style="
+                    font-size: 0.7rem;
+                    color: #f5a623;
+                    font-weight: 700;
+                    margin-bottom: 6px;
+                  "
+                >
+                  LOW STOCK
+                </div>
+                <div style="font-size: 0.88rem; color: var(--white)">
+                  "Hurry — only 1 of your saved hoodie remains. 🛒"
+                </div>
+              </div>
+              <div
+                style="
+                  background: var(--bg2);
+                  border: 1px solid var(--border);
+                  border-radius: 12px;
+                  padding: 16px 20px;
+                  flex: 1;
+                  min-width: 220px;
+                "
+              >
+                <div
+                  style="
+                    font-size: 0.7rem;
+                    color: var(--muted);
+                    font-weight: 700;
+                    margin-bottom: 6px;
+                  "
+                >
+                  WELCOME BACK
+                </div>
+                <div style="font-size: 0.88rem; color: var(--white)">
+                  "Welcome back! Your cart from 3 days ago is ready ✓"
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SOCIAL PROOF ───────────────────────────────────────── -->
+    <section class="social-proof">
+      <div class="container">
+        <div class="proof-numbers">
+          <div class="proof-stat reveal">
+            <div class="proof-num"><em>52–67</em>%</div>
+            <div class="proof-desc">
+              of shoppers use multiple devices before buying
+            </div>
+          </div>
+          <div class="proof-stat reveal reveal-delay-1">
+            <div class="proof-num"><em>~20</em>%</div>
+            <div class="proof-desc">
+              of cart abandonments are device-switch related
+            </div>
+          </div>
+          <div class="proof-num-stat reveal reveal-delay-2">
+            <div class="proof-num"><em>2.5M+</em></div>
+            <div class="proof-desc">Shopify merchants who could benefit</div>
+          </div>
+          <div class="proof-stat reveal reveal-delay-3">
+            <div class="proof-num">$<em>5k</em></div>
+            <div class="proof-desc">monthly revenue recoverable per store</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── PRICING ────────────────────────────────────────────── -->
+    <section class="pricing" id="pricing">
+      <div class="container">
+        <span
+          class="section-label reveal"
+          style="display: block; text-align: center"
+          >Pricing</span
+        >
+        <h2 class="section-title reveal" style="text-align: center">
+          Simple, transparent pricing
+        </h2>
+        <p
+          class="section-sub reveal"
+          style="text-align: center; margin: 0 auto 64px"
+        >
+          Billed through Shopify — no separate invoices, no surprises. Cancel
+          anytime.
+        </p>
+
+        <div class="pricing-grid">
+          <div class="pricing-card reveal reveal-delay-1">
+            <div class="plan-name">Starter</div>
+            <div class="plan-price">Free</div>
+            <div class="plan-desc">Perfect for getting started</div>
+            <div class="plan-divider"></div>
+            <ul class="plan-features">
+              <li class="included">
+                <span class="check-icon">✓</span> Up to 50 cart syncs/month
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> Logged-in customer sync
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> Toast notifications
+              </li>
+              <li style="opacity: 0.4">
+                <span class="check-icon" style="color: var(--muted)">—</span>
+                Analytics dashboard
+              </li>
+              <li style="opacity: 0.4">
+                <span class="check-icon" style="color: var(--muted)">—</span>
+                Guest mode sync
+              </li>
+              <li style="opacity: 0.4">
+                <span class="check-icon" style="color: var(--muted)">—</span> AI
+                nudges
+              </li>
+            </ul>
+            <a href="#early-access" class="plan-cta plan-cta-outline"
+              >Get Started Free</a
+            >
+          </div>
+
+          <div class="pricing-card highlighted reveal reveal-delay-2">
+            <div class="popular-badge">Most Popular</div>
+            <div class="plan-name">Growth</div>
+            <div class="plan-price">$9.99<span>/month</span></div>
+            <div class="plan-desc">For serious Shopify stores</div>
+            <div class="plan-divider"></div>
+            <ul class="plan-features">
+              <li class="included">
+                <span class="check-icon">✓</span> Unlimited cart syncs
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> Full analytics dashboard
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> 30-day cart retention
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> Smart merge engine
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> Device patterns report
+              </li>
+              <li style="opacity: 0.4">
+                <span class="check-icon" style="color: var(--muted)">—</span>
+                Guest mode &amp; AI nudges
+              </li>
+            </ul>
+            <a href="#early-access" class="plan-cta plan-cta-solid"
+              >Start Free Trial</a
+            >
+          </div>
+
+          <div class="pricing-card reveal reveal-delay-3">
+            <div class="plan-name">Pro</div>
+            <div class="plan-price">$19.99<span>/month</span></div>
+            <div class="plan-desc">Full power, every feature</div>
+            <div class="plan-divider"></div>
+            <ul class="plan-features">
+              <li class="included">
+                <span class="check-icon">✓</span> Everything in Growth
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> Guest mode (email hashing)
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> AI-powered nudges
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> 90-day cart retention
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> AI insights in dashboard
+              </li>
+              <li class="included">
+                <span class="check-icon">✓</span> Priority support
+              </li>
+            </ul>
+            <a href="#early-access" class="plan-cta plan-cta-outline"
+              >Start Free Trial</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EARLY ACCESS FORM ──────────────────────────────────── -->
+    <section class="early-access" id="early-access">
+      <div class="form-glow"></div>
+      <div class="container">
+        <div class="form-wrapper">
+          <span
+            class="section-label reveal"
+            style="display: block; text-align: center"
+            >Early Access</span
+          >
+          <h2 class="section-title reveal">Be the first to use CartSync Pro</h2>
+          <p class="section-sub reveal reveal-delay-1">
+            We're onboarding a limited number of early merchants. Drop your
+            details below and we'll be in touch — plus your feedback shapes the
+            roadmap.
+          </p>
+
+          <div class="form-card reveal reveal-delay-2" id="formCard">
+            <form id="earlyAccessForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="firstName"
+                    >First Name <span>*</span></label
+                  >
+                  <input
+                    class="form-input"
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    placeholder="Alex"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="lastName">Last Name</label>
+                  <input
+                    class="form-input"
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Johnson"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="email"
+                  >Email Address <span>*</span></label
+                >
+                <input
+                  class="form-input"
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="alex@yourstore.com"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="store">Shopify Store URL</label>
+                <input
+                  class="form-input"
+                  type="text"
+                  id="store"
+                  name="store"
+                  placeholder="yourstore.myshopify.com"
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="suggestion"
+                  >Suggestions / Questions</label
+                >
+                <textarea
+                  class="form-textarea"
+                  id="suggestion"
+                  name="suggestion"
+                  placeholder="What feature would matter most to you? Any questions? We read every response."
+                ></textarea>
+              </div>
+
+              <button type="submit" class="form-submit">
+                Request Early Access →
+              </button>
+              <p class="form-note">
+                🔒 No spam. We'll only email you about CartSync Pro. Unsubscribe
+                anytime.
+              </p>
+            </form>
+
+            <div class="success-state" id="successState">
+              <div class="success-icon">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <h3>You're on the list! 🎉</h3>
+              <p>
+                Thanks for signing up. We'll reach out shortly with your early
+                access details. Keep an eye on your inbox.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FOOTER ────────────────────────────────────────────── -->
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <div>
+            <a
+              href="#"
+              class="logo"
+              style="font-size: 1rem; margin-bottom: 8px; display: inline-flex"
+            >
+              <div class="logo-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 3L3 8l9 5 9-5-9-5zM3 13l9 5 9-5M3 18l9 5 9-5" />
+                </svg>
+              </div>
+              CartSync Pro
+            </a>
+            <p class="footer-copy" style="margin-top: 6px">
+              Built by Simple Plan Media · © 2026
+            </p>
+          </div>
+          <ul class="footer-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#early-access">Early Access</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* ─── SCROLL REVEAL ────────────────────── */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => revealObserver.observe(el));
+
+      /* ─── MOBILE MENU ──────────────────────── */
+      function openMobileMenu() {
+        document.getElementById("mobileMenu").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+      function closeMobileMenu() {
+        document.getElementById("mobileMenu").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      /* ─── FORM SUBMIT ──────────────────────── */
+      document
+        .getElementById("earlyAccessForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const btn = this.querySelector(".form-submit");
+          btn.textContent = "Submitting…";
+          btn.disabled = true;
+
+          // Simulate a short delay then show success
+          setTimeout(() => {
+            document.getElementById("earlyAccessForm").style.display = "none";
+            document.getElementById("successState").style.display = "flex";
+          }, 900);
+
+          /* ── TO CONNECT A REAL BACKEND ──
+       Replace the setTimeout above with:
+
+       const data = Object.fromEntries(new FormData(this));
+       fetch('https://your-api.com/early-access', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(data)
+       }).then(() => {
+         document.getElementById('earlyAccessForm').style.display = 'none';
+         document.getElementById('successState').style.display = 'flex';
+       });
+
+       Or use a Formspree endpoint (https://formspree.io) — free tier,
+       add your form ID: action="https://formspree.io/f/YOUR_ID"
+    ──────────────────────────────── */
+        });
+
+      /* ─── STAT COUNTER ANIMATION ───────────── */
+      function animateCount(el, target, suffix, duration) {
+        const start = performance.now();
+        const update = (time) => {
+          const progress = Math.min((time - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.floor(eased * target) + suffix;
+          if (progress < 1) requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
+      }
+
+      const statsObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              statsObserver.unobserve(entry.target);
+              entry.target.querySelectorAll(".stat-number").forEach((el) => {
+                const text = el.textContent;
+                const num = parseFloat(text.replace(/[^0-9.]/g, ""));
+                const suffix = text.replace(/[0-9.]/g, "");
+                if (!isNaN(num)) animateCount(el, num, suffix, 1200);
+              });
+            }
+          });
+        },
+        { threshold: 0.5 },
+      );
+
+      const heroStats = document.querySelector(".hero-stats");
+      if (heroStats) statsObserver.observe(heroStats);
+    </script>
+  </body>
+</html>
