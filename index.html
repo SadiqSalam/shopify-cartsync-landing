@@ -1700,16 +1700,45 @@
       }
 
       /* ─── FORM SUBMIT ────────────────────────── */
-      document.getElementById("earlyAccessForm").addEventListener("submit", function (e) {
+      const SUPABASE_URL = "https://fdfhpstnwuioicqccwmc.supabase.co"; // ← your project URL
+      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkZmhwc3Rud3Vpb2ljcWNjd21jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4Mjc5MDgsImV4cCI6MjA5MzQwMzkwOH0.KB1c3pkt-SOZLWQmGksk5V6duq4kOj7XM28v5bJryZg";                           // ← your anon public key
+
+      document.getElementById("earlyAccessForm").addEventListener("submit", async function (e) {
         e.preventDefault();
         const btn = this.querySelector(".form-submit");
         btn.textContent = "Submitting…";
         btn.disabled = true;
-        setTimeout(() => {
+
+        const payload = {
+          first_name: document.getElementById("firstName").value.trim(),
+          last_name:  document.getElementById("lastName").value.trim() || null,
+          email:      document.getElementById("email").value.trim(),
+          store_url:  document.getElementById("store").value.trim() || null,
+          message:    document.getElementById("suggestion").value.trim() || null,
+        };
+
+        try {
+          const res = await fetch(`${SUPABASE_URL}/rest/v1/signups`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_KEY,
+              "Authorization": `Bearer ${SUPABASE_KEY}`,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (!res.ok) throw new Error("Request failed");
+
           document.getElementById("earlyAccessForm").style.display = "none";
-          const s = document.getElementById("successState");
-          s.style.display = "flex";
-        }, 900);
+          document.getElementById("successState").style.display = "flex";
+
+        } catch (err) {
+          btn.textContent = "Submit →";
+          btn.disabled = false;
+          alert("Something went wrong — please try again.");
+        }
       });
 
       /* ─── STAT COUNTER ANIMATION ─────────────── */
