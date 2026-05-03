@@ -719,6 +719,28 @@
 
       /* ─── PRICING ─────────────────────────────────────────────── */
       .pricing { padding: 100px 0; }
+      .launch-offer {
+        background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(56,189,248,0.03));
+        border: 1px solid var(--accent-border);
+        border-radius: 16px;
+        padding: 20px 28px;
+        margin-bottom: 48px;
+      }
+      .launch-offer-inner { display: flex; align-items: flex-start; gap: 16px; }
+      .launch-offer-emoji { font-size: 1.6rem; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+      .launch-offer-title {
+        font-family: var(--font-display);
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--white);
+        margin-bottom: 5px;
+        line-height: 1.3;
+      }
+      .launch-offer-sub { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+      .launch-offer-sub strong { color: var(--accent); font-weight: 600; }
+      .plan-price-original { font-size: 0.78rem; color: var(--muted); margin-bottom: 6px; line-height: 1.4; }
+      .plan-price-original s { opacity: 0.6; }
+      .pricing-footnote { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 32px; line-height: 1.5; }
       .pricing-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -1552,12 +1574,23 @@
       <div class="container">
         <span class="section-label reveal" style="display:block;text-align:center;">Pricing</span>
         <h2 class="section-title reveal" style="text-align:center;">Simple, transparent pricing</h2>
-        <p class="section-sub reveal" style="text-align:center;margin:0 auto 64px;">Billed through Shopify — no separate invoices, no surprises. Cancel anytime.</p>
+        <p class="section-sub reveal" style="text-align:center;margin:0 auto 40px;">Billed through Shopify — no separate invoices, no surprises. Cancel anytime.</p>
+
+        <div class="launch-offer reveal">
+          <div class="launch-offer-inner">
+            <div class="launch-offer-emoji">🎁</div>
+            <div>
+              <div class="launch-offer-title">Free for the first 200 merchants — 3 months, no card needed</div>
+              <div class="launch-offer-sub">Try everything, keep what you earn. After 3 months, move to a paid plan with <strong>20% off for life</strong> as a founding member.</div>
+            </div>
+          </div>
+        </div>
+
         <div class="pricing-grid">
           <div class="pricing-card reveal reveal-delay-1">
             <div class="plan-name">Starter</div>
             <div class="plan-price">Free</div>
-            <div class="plan-desc">Perfect for getting started</div>
+            <div class="plan-desc">Always free, no time limit</div>
             <div class="plan-divider"></div>
             <ul class="plan-features">
               <li class="included"><span class="check-icon">✓</span> Up to 50 cart syncs/month</li>
@@ -1567,12 +1600,13 @@
               <li style="opacity:0.4"><span class="check-icon" style="color:var(--muted)">—</span> Guest mode sync</li>
               <li style="opacity:0.4"><span class="check-icon" style="color:var(--muted)">—</span> AI nudges</li>
             </ul>
-            <a href="#notify" class="plan-cta plan-cta-outline">Get Notified</a>
+            <a href="#notify" class="plan-cta plan-cta-outline">Claim Free Access</a>
           </div>
           <div class="pricing-card highlighted reveal reveal-delay-2">
             <div class="popular-badge">Most Popular</div>
             <div class="plan-name">Growth</div>
-            <div class="plan-price">$9.99<span>/month</span></div>
+            <div class="plan-price">$5.99<span>/month</span></div>
+            <div class="plan-price-original"><s>$9.99</s> — 20% off for founding members</div>
             <div class="plan-desc">For serious Shopify stores</div>
             <div class="plan-divider"></div>
             <ul class="plan-features">
@@ -1583,11 +1617,12 @@
               <li class="included"><span class="check-icon">✓</span> Device patterns report</li>
               <li style="opacity:0.4"><span class="check-icon" style="color:var(--muted)">—</span> Guest mode &amp; AI nudges</li>
             </ul>
-            <a href="#notify" class="plan-cta plan-cta-solid">Get Notified at Launch</a>
+            <a href="#notify" class="plan-cta plan-cta-solid">Claim Free Access</a>
           </div>
           <div class="pricing-card reveal reveal-delay-3">
             <div class="plan-name">Pro</div>
-            <div class="plan-price">$19.99<span>/month</span></div>
+            <div class="plan-price">$11.99<span>/month</span></div>
+            <div class="plan-price-original"><s>$14.99</s> — 20% off for founding members</div>
             <div class="plan-desc">Full power, every feature</div>
             <div class="plan-divider"></div>
             <ul class="plan-features">
@@ -1598,9 +1633,11 @@
               <li class="included"><span class="check-icon">✓</span> AI insights in dashboard</li>
               <li class="included"><span class="check-icon">✓</span> Priority support</li>
             </ul>
-            <a href="#notify" class="plan-cta plan-cta-outline">Get Notified</a>
+            <a href="#notify" class="plan-cta plan-cta-outline">Claim Free Access</a>
           </div>
         </div>
+
+        <p class="pricing-footnote reveal">Spots are limited to 200 merchants. After that, standard pricing applies for new signups.</p>
       </div>
     </section>
 
@@ -1670,7 +1707,7 @@
               </div>
               CartSync Pro
             </a>
-            <p class="footer-copy">Built by Us · © 2026</p>
+            <p class="footer-copy">Built by Simple Plan Media · © 2026</p>
           </div>
           <ul class="footer-links">
             <li><a href="#features">Features</a></li>
@@ -1700,8 +1737,8 @@
       }
 
       /* ─── FORM SUBMIT ────────────────────────── */
-      const SUPABASE_URL = "https://fdfhpstnwuioicqccwmc.supabase.co/"; // ← your project URL
-      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkZmhwc3Rud3Vpb2ljcWNjd21jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4Mjc5MDgsImV4cCI6MjA5MzQwMzkwOH0.KB1c3pkt-SOZLWQmGksk5V6duq4kOj7XM28v5bJryZg";                           // ← your anon public key
+      const SUPABASE_URL = "https://fdfhpstnwuioicqccwmc.supabase.co"; // ← your project URL
+      const SUPABASE_KEY = "sb_publishable_W_Z7NcJNRy7erj1ODpb3DA_y3nzfY4K";                           // ← your anon public key
 
       document.getElementById("earlyAccessForm").addEventListener("submit", async function (e) {
         e.preventDefault();
